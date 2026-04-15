@@ -50,4 +50,4 @@ The implementation has been verified and it **successfully meets all the specifi
 
 1. Clone or open this folder.
 2. Run `index.html` within your preferred lightweight server or simply by double-clicking it to evaluate the render on a modern web-browser.
-3. You can also view it in this [Live Demo](https://frontend-wizards-task-1.vercel.app/)
+3. You can also view it in this [Live Demo](https://okparahng1.netlify.app/)
