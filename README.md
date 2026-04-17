@@ -1,53 +1,54 @@
-# Todo Card Component
+# Advanced Todo Card (Stage 1a)
 
-This directory contains a modern, fully responsive, and accessible Todo/Task Card component built for the **Frontend Wizards — Stage 0 Task**.
+**[🔥 View Live Demo](https://okparahng1.netlify.app/)** | **[💻 GitHub Repository](https://github.com/Okpara202/To-do-Card)**
 
-## Features & Requirements Checklist
+This project extends the initial Stage 0 Todo Card into an interactive, stateful web component, thoroughly adhering to accessibility standards (WCAG) and fluid responsive design practices.
 
-The implementation has been verified and it **successfully meets all the specified requirements**:
+## What Changed from Stage 0 (How it Fulfills the Requirements)
 
-### Exact `data-testid` Signatures
+The component has been significantly upgraded from a static UI to a dynamic, interactive state-driven module. Every requirement for Stage 1a has been met:
 
-- `test-todo-card` (Root `<article>` element)
-- `test-todo-title` (`<h2>` Task title)
-- `test-todo-description` (`<p>` Task description)
-- `test-todo-priority` (Priority label displaying "High")
-- `test-todo-due-date` (Formatted `<time>` element)
-- `test-todo-time-remaining` (`<time>` element that auto-updates)
-- `test-todo-status` (Status indicator)
-- `test-todo-complete-toggle` (`<input type="checkbox">` with label)
-- `test-todo-tags` (`<div role="list">` Tags container)
-- `test-todo-tag-work` & `test-todo-tag-urgent` (Specific list items)
-- `test-todo-edit-button` (Edit `<button>`)
-- `test-todo-delete-button` (Delete `<button>`)
+### 1. Interactive Edit Mode
+- **What Changed:** Added an editing form `<div data-testid="test-todo-edit-form">` hidden by default. Clicking the `Edit` button transitions the card into Edit Mode.
+- **Requirement Fulfilled:** The user can now update the title, description, priority, and due date. 
+  - Allows saving updates or canceling to cleanly restore previous snapshot values.
+  - Implements a sophisticated **focus trap** that keeps keyboard navigation strictly within the form when active, and gracefully returns focus back to the `Edit` button natively upon closing.
 
-### Semantic HTML
+### 2. Status Controls & Bi-directional State
+- **What Changed:** A `<select>` dropdown now controls the exact state of the task (`Pending`, `In Progress`, `Done`).
+- **Requirement Fulfilled:** 
+  - Valid logic: Marking a task as "Done" dynamically checks the footer `Mark as complete` toggle, strikes through the title contextually with muted styling, and halts the active due-date timer.
+  - Unchecking "Mark as complete" seamlessly reverts the dropdown specific state back to "Pending".
+  - Selecting "In Progress" correctly styles the card container with a distinct active-blue highlight.
 
-- Wraps the component cleanly within an `<article>`.
-- Appropriately uses native `<time>`, `<p>`, `<h2>`, `<button>` and valid nested text containers.
-- Inputs and forms use native elements `<label>` > `<input type="checkbox">`.
+### 3. Priority & Visual Accents
+- **What Changed:** The component’s aesthetics actively respond to state object manipulation.
+- **Requirement Fulfilled:** Toggling priority to `High` invokes a prominent red top-border and color badge, `Medium` yields warm-orange, and `Low` adapts muted gray UI. The class bindings actively update dynamically when changed via the Edit form.
 
-### Accessibility (A11y)
+### 4. Dynamic Time Management
+- **What Changed:** Replaced boilerplate text with a `setInterval` loop calculating elapsed timestamp differences every 30 seconds.
+- **Requirement Fulfilled:** Calculations handle and format accurate grammar outputting exactly `"Due in X hours"` and `"Due in X minutes"`. Once time mathematically expires, a flashing red **Overdue** badge renders securely and recolors ambient card-surfaces implicitly to a warning tone. Time stops recalculating fully when a task completes.
 
-- Added `aria-label` where needed (e.g. for badges and buttons).
-- Defined roles implicitly and explicitly where needed (`role="list"` for tags mapping).
-- Used `aria-live="polite"` on the countdown timer to keep screen readers updated safely.
-- Explicit and custom `:focus-visible` ring on interactable elements to guarantee keyboard navigability.
+### 5. Expand & Collapse Behaviors
+- **What Changed:** For excessively long strings of data, a text threshold checker toggles a collapse container module.
+- **Requirement Fulfilled:** Any description exceeding `120` characters truncates visually with a gradient mask. Actively clicking the dynamic "Show more" button relies seamlessly on `aria-expanded="true/false"` ensuring visibility and complete screen reader notification mechanics.
 
-### ✅ Mobile & Responsiveness
+### 6. Flawless Responsive Implementation
+- **What Changed:** Modified breakpoints and flex wrapping limits natively accommodating extreme string inputs.
+- **Requirement Fulfilled:** Design strictly scales securely across 320px mobile resolutions smoothly out to native 1024px+ desktop boundaries. The title safely uses `word-break` formatting without layout breaks, tags wrap safely, and importantly, Edit form elements intelligently collapse vertically exclusively onto responsive mobile frames minimizing layout breaks.
 
-- Adheres to standard mobile viewport principles (100% width padded structure on small screens).
-- Restricts layout gently to `max-width: 540px` on desktop layouts, fulfilling the relaxed, structured task requirement.
-- Implements `flex-wrap` correctly so overflow never occurs within the tags grouping.
+## New Design Decisions
 
-### Dynamics / Interactions
+1. **State-Driven Architecture (Vanilla JS):** Instead of isolated DOM manipulation everywhere, the logic centralizes using a vanilla JavaScript state object (`const state = { ... }`). A singular unified `applyState()` function is utilized sequentially propagating UI updates guaranteeing robust synchronization between the Checkbox matching what the Dropdown assumes.
+2. **Snapshot Caching for UI Forms:** Cancel/rollback execution avoids messy conditional reverts simply by capturing profound deep-clones (`editSnapshot`). Restoring becomes incredibly swift.
 
-- **Live Countdown**: Computes dynamically on load using vanilla `Date` comparison logic and refreshes every 60 seconds smoothly.
-- **Visual Checkbox**: Listens for state changes via `onChange` and applies visual changes natively to the card and its titles.
-- **Console Methods**: Dummy events linked to buttons to verify interactability.
+## Known Limitations
 
-## Instructions
+- **Persistent Application Storage:** Because the component simulates front-end stage 1 requirements, the variables reset upon browser refresh. Next stages could adapt `localStorage` bindings to natively persist UI edits permanently.
+- **Dates Input Restrictions:** Standard implementations of `datetime-local` elements dynamically lack min-date HTML blocking. Submitting dates located historically instantly triggers localized "Overdue" logic instead of rejecting input natively. 
 
-1. Clone or open this folder.
-2. Run `index.html` within your preferred lightweight server or simply by double-clicking it to evaluate the render on a modern web-browser.
-3. You can also view it in this [Live Demo](https://okparahng1.netlify.app/)
+## Accessibility Notes
+
+- **Aria Roles and Live Regions:** `aria-live="polite"` binds successfully to real-time timer elements allowing standard screen readers to periodically inform contextually without randomly shouting timeline changes unprovoked to users.
+- **Semantic For=>Id Mapping:** `<label for="[id]">` logic explicitly wraps every interactive user selection validating standard HTML Form semantics natively without reliance purely on nested visual text grouping.
+- **Keyboard Tab Flow:** Traversal intelligently scopes sequentially moving accurately through specific components. Custom keydown events secure form submission contexts heavily assisting handicap accessibility.
